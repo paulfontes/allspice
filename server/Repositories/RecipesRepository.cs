@@ -49,14 +49,39 @@ public class RecipeRepository(IDbConnection db)
         return recipes;
     }
 
-    public Recipe GetRecipeById(Recipe recipe)
+    public Recipe GetRecipeById(int recipeId)
     {
         string sql = @"
-        
+        SELECT
+        recipes.*,
+        accounts.*
+        FROM recipes
+        INNER JOIN accounts ON accounts.id = recipes.creator_id
+        WHERE recipes.id = @recipeId
         ;";
+
+        Recipe recipe = _db.Query<Recipe, Account, Recipe>(sql, PopulateCreator, new { recipeId }).SingleOrDefault();
+        return recipe;
     }
 
+    public void UpdateRecipe(Recipe recipeData)
+    {
+        string sql = @"
+        UPDATE recipes
+        SET
+        title = @Title,
+        instructions = @Instructions,
+        img = @Img,
+        category = @Category
+        WHERE id = @Id LIMIT 1;";
 
+        int rowsAffected = _db.Execute(sql, recipeData);
+
+        if (rowsAffected != 1)
+        {
+            throw new Exception($"{rowsAffected} rows of data are now updated without consent not good!");
+        }
+    }
 
 
     private Recipe PopulateCreator(Recipe recipe, Account creator)

@@ -38,6 +38,36 @@ public class RecipesController(Auth0Provider auth, RecipesService recipesService
             return BadRequest(exception.Message);
         }
     }
+
+    [HttpGet("{recipeId}")]
+    public ActionResult<Recipe> GetRecipeById(int recipeId)
+    {
+        try
+        {
+            Recipe recipe = _recipesService.GetRecipeById(recipeId);
+            return Ok(recipe);
+        }
+        catch (Exception exception)
+        {
+            return BadRequest(exception.Message);
+        }
+    }
+
+    [HttpGet("{recipeId}")]
+    [Authorize]
+    public async Task<ActionResult<Recipe>> UpdateRecipe(int recipeId, [FromBody] Recipe recipeData)
+    {
+        try
+        {
+            Account userInfo = await _auth.GetUserInfoAsync<Account>(HttpContext);
+            Recipe recipe = _recipesService.UpdateRecipe(recipeId, recipeData, userInfo);
+            return Ok(recipe);
+        }
+        catch (Exception exception)
+        {
+            return BadRequest(exception.Message);
+        }
+    }
 }
 
 
