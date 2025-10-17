@@ -1,3 +1,4 @@
+
 namespace allspice.Repositories;
 
 
@@ -10,14 +11,17 @@ public class RecipeRepository(IDbConnection db)
     {
         string sql = @"
         INSERT INTO recipes
-        (title, instructions, img, category, creator_id);
+        (title, instructions, img, category, creator_id)
+
+        VALUES
+        (@Title, @Instructions, @Img, @Category, @CreatorId);
 
         SELECT
-         albums.*,
+         recipes.*,
          accounts.*
          FROM recipes
-         JOIN accounts ON account.id = albums.creator_id
-         WHERE albums.id = LAST_INSERT_ID()
+         JOIN accounts ON accounts.id = recipes.creator_id
+         WHERE recipes.id = LAST_INSERT_ID()
         ;";
 
         Recipe recipe = _db.Query(sql,
@@ -27,6 +31,26 @@ public class RecipeRepository(IDbConnection db)
             return recipe;
         }
         , recipeData).SingleOrDefault();
+        return recipe;
+    }
+
+    public List<Recipe> GetAllRecipes()
+    {
+        string sql = @"
+        SELECT
+            recipes.*;
+            accounts.*
+        FROM recipes
+        INNER JOIN accounts ON accounts.id = recipes.creator_id
+        ;";
+
+        List<Recipe> recipes = _db.Query<Recipe, Account, Recipe>(sql, PopulateCreator).ToList();
+        return recipes;
+    }
+
+    private Recipe PopulateCreator(Recipe recipe, Account creator)
+    {
+        recipe.Creator = creator;
         return recipe;
     }
 }

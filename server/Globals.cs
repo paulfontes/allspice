@@ -14,3 +14,4 @@ global using CodeWorks.Utils;
 global using allspice.Repositories;
 global using allspice.Services;
 global using allspice.Models;
+global using allspice.Interfaces;
