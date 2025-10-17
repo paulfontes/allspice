@@ -53,7 +53,7 @@ public class RecipesController(Auth0Provider auth, RecipesService recipesService
         }
     }
 
-    [HttpGet("{recipeId}")]
+    [HttpPut("{recipeId}")]
     [Authorize]
     public async Task<ActionResult<Recipe>> UpdateRecipe(int recipeId, [FromBody] Recipe recipeData)
     {
