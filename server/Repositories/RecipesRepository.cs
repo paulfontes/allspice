@@ -38,9 +38,10 @@ public class RecipeRepository(IDbConnection db)
     {
         string sql = @"
         SELECT
-            recipes.*;
+            recipes.*,
             accounts.*
-        FROM recipes
+        FROM 
+            recipes
         INNER JOIN accounts ON accounts.id = recipes.creator_id
         ;";
 
@@ -48,9 +49,21 @@ public class RecipeRepository(IDbConnection db)
         return recipes;
     }
 
+    public Recipe GetRecipeById(Recipe recipe)
+    {
+        string sql = @"
+        
+        ;";
+    }
+
+
+
+
     private Recipe PopulateCreator(Recipe recipe, Account creator)
     {
         recipe.Creator = creator;
         return recipe;
     }
+
+
 }
