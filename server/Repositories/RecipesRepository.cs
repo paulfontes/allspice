@@ -83,6 +83,13 @@ public class RecipeRepository(IDbConnection db)
         }
     }
 
+    public void DeleteRecipe(int recipeData)
+    {
+        string sql = @"
+        
+        ;";
+    }
+
 
     private Recipe PopulateCreator(Recipe recipe, Account creator)
     {
